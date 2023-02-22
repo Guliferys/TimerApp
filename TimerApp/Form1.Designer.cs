@@ -106,11 +106,11 @@ namespace TimerApp
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Cronometru sa pornit!";
             logFile.WriteLine(logMessage);
 
             userTimer.Start();
+            button1.Visible = false;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
