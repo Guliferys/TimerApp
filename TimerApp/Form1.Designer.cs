@@ -40,11 +40,9 @@ namespace TimerApp
 
             inactivityTimer.Interval = 1000; // Interval de 1 secundă
             inactivityTimer.Tick += inactivityTimer_Tick;
-            inactivityTimer.Start();
 
             inactivityTimer2.Interval = 5000; // Interval de 10 secundă pentru avertizare
             inactivityTimer2.Tick += inactivityTimer2_Tick;
-            inactivityTimer2.Start();
 
 
             FormClosing += Form1_FormClosing;
@@ -109,6 +107,8 @@ namespace TimerApp
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Cronometru sa pornit!";
             logFile.WriteLine(logMessage);
 
+            inactivityTimer.Start();
+            inactivityTimer2.Start();
             userTimer.Start();
             button1.Visible = false;
         }

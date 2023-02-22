@@ -22,9 +22,10 @@ namespace TimerApp
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(103, 193);
+            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Location = new System.Drawing.Point(88, 162);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(112, 40);
             this.button1.TabIndex = 0;
             this.button1.Text = "Start";
             this.button1.UseVisualStyleBackColor = true;
