@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Security.Principal;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Runtime.InteropServices;
 
 
 namespace TimerApp
@@ -20,6 +21,13 @@ namespace TimerApp
         private int hours = 0;
         private StreamWriter logFile;
         WindowsIdentity identity = WindowsIdentity.GetCurrent();
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private const int SW_RESTORE = 9;
+
+
 
         public Form1()
         {
@@ -51,6 +59,22 @@ namespace TimerApp
 
             //Windows user
             //MessageBox.Show("Numele utilizatorului curent este: " + username);
+
+            // Menține fereastra aplicației în prim-plan
+            SetForegroundWindow(this.Handle);
+
+            // Redimensionează fereastra aplicației
+            this.WindowState = FormWindowState.Normal;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.Bounds = Screen.PrimaryScreen.Bounds;
+            this.TopMost = true;
+
+
+            // Setare pozitie elemente pe centru
+            labelTime.Left = (ClientSize.Width - labelTime.Width) / 2;
+            labelTime.Top = (ClientSize.Height - labelTime.Height) / 4;
+            button1.Left = (ClientSize.Width - button1.Width) / 2;
+            button1.Top = (ClientSize.Height - button1.Height) / 2;
 
 
             FormClosing += Form1_FormClosing;
@@ -123,6 +147,7 @@ namespace TimerApp
             userTimer.Start();
             button1.Visible = false;
             this.WindowState = FormWindowState.Minimized;
+
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
