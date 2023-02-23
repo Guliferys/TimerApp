@@ -9,11 +9,11 @@ using System.Runtime.InteropServices;
 
 namespace TimerApp
 {
-    public partial class AuthenticationForm : Form
+    public partial class AuthForm : Form
     {
         private readonly string password;
 
-        public AuthenticationForm(string password)
+        public AuthForm(string password)
         {
             InitializeComponent();
             this.password = password;

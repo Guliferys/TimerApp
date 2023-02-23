@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace TimerApp
 {
-    public partial class AuthenticationForm : Form
+    public partial class AuthForm : Form
     {
-        public AuthenticationForm()
+        public AuthForm()
         {
             InitializeComponent();
         }
@@ -38,7 +38,7 @@ namespace TimerApp
             // 
             this.txtPassword.Location = new System.Drawing.Point(89, 105);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(100, 20);
+            this.txtPassword.Size = new System.Drawing.Size(100, 22);
             this.txtPassword.TabIndex = 1;
             // 
             // button1
@@ -51,14 +51,15 @@ namespace TimerApp
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // AuthenticationForm
+            // AuthForm
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.label1);
-            this.Name = "AuthenticationForm";
+            this.Name = "AuthForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.ResumeLayout(false);
             this.PerformLayout();
 

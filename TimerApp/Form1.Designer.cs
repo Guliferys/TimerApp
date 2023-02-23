@@ -22,6 +22,7 @@ namespace TimerApp
         private StreamWriter logFile;
         WindowsIdentity identity = WindowsIdentity.GetCurrent();
         private const string password = "parola";
+        public static Form1 Instance;
 
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -32,6 +33,8 @@ namespace TimerApp
             public Form1()
         {
             InitializeComponent();
+            //Instanta form1 (pentru BackForm)
+            Instance = this;
 
             // Inițializăm ultimele coordonate ale mouse-ului cu poziția curentă
             lastCursorPosition = Cursor.Position;
@@ -64,10 +67,17 @@ namespace TimerApp
             SetForegroundWindow(this.Handle);
 
             // Redimensionează fereastra aplicației
-            this.WindowState = FormWindowState.Normal;
             this.FormBorderStyle = FormBorderStyle.None;
-            this.Bounds = Screen.PrimaryScreen.Bounds;
             this.TopMost = true;
+            //this.Bounds = Screen.PrimaryScreen.WorkingArea;
+
+
+
+            // Creează o instanță a noii forme
+            BackForm backForm = new BackForm();
+
+            // Arată forma
+            backForm.Show();
 
 
             // Setare pozitie elemente pe centru
@@ -106,7 +116,6 @@ namespace TimerApp
             userTimer.Stop();
             // Afișăm un mesaj de avertizare cu MessageBox
             DialogResult result = MessageBox.Show("Confirmați că sunteți pe loc!", "Inactivitate detectată", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly);
-            //MessageBox.Show("Mesaj important!", "Titlu", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly);
 
             if (result == DialogResult.OK)
             {
@@ -155,6 +164,8 @@ namespace TimerApp
             btn_hide.Visible = true;
             btn_exit.Visible = true;
 
+            BackForm.backFormInstance.ClosingFromButton(); //Inchide BackForm dupa butonul Start
+
         }
         private void buttonHide_Click(object sender, EventArgs e)
         {
@@ -162,7 +173,7 @@ namespace TimerApp
         }
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            using (var authForm = new AuthenticationForm(password))
+            using (var authForm = new AuthForm(password))
             {
                 var result = authForm.ShowDialog();
                 if (result == DialogResult.OK)
