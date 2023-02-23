@@ -2,6 +2,9 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Security.Principal;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
 
 namespace TimerApp
 {
@@ -16,6 +19,7 @@ namespace TimerApp
         private int minutes = 0;
         private int hours = 0;
         private StreamWriter logFile;
+        WindowsIdentity identity = WindowsIdentity.GetCurrent();
 
         public Form1()
         {
@@ -45,6 +49,10 @@ namespace TimerApp
             inactivityTimer2.Tick += inactivityTimer2_Tick;
 
 
+            //Windows user
+            //MessageBox.Show("Numele utilizatorului curent este: " + username);
+
+
             FormClosing += Form1_FormClosing;
         }
      
@@ -69,7 +77,9 @@ namespace TimerApp
             inactivityTimer2.Stop();
             userTimer.Stop();
             // Afișăm un mesaj de avertizare cu MessageBox
-            DialogResult result = MessageBox.Show("Are you here?", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            DialogResult result = MessageBox.Show("Confirmați că sunteți pe loc!", "Inactivitate detectată", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly);
+            //MessageBox.Show("Mesaj important!", "Titlu", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly);
+
             if (result == DialogResult.OK)
             {
                 inactivityTimer.Start();
@@ -81,7 +91,7 @@ namespace TimerApp
 
         private void LogTimer_Tick(object sender, EventArgs e)
         {
-            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Cronometrul arata: {hours:00}:{minutes:00}:{seconds:00}";
+            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Cronometrul arata: {hours:00}:{minutes:00}:{seconds:00}";
             logFile.WriteLine(logMessage);
         }
 
@@ -104,7 +114,8 @@ namespace TimerApp
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Cronometru sa pornit!";
+            string username = identity.Name;
+            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!";
             logFile.WriteLine(logMessage);
 
             inactivityTimer.Start();
@@ -115,7 +126,7 @@ namespace TimerApp
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            logFile.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Aplicatia sa oprit!");
+            logFile.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
             logFile.Close();
         }
 
