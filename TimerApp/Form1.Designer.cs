@@ -122,6 +122,7 @@ namespace TimerApp
             inactivityTimer2.Start();
             userTimer.Start();
             button1.Visible = false;
+            this.WindowState = FormWindowState.Minimized;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
