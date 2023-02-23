@@ -21,6 +21,7 @@ namespace TimerApp
         private int hours = 0;
         private StreamWriter logFile;
         WindowsIdentity identity = WindowsIdentity.GetCurrent();
+        private const string password = "parola";
 
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -28,8 +29,7 @@ namespace TimerApp
         private const int SW_RESTORE = 9;
 
 
-
-        public Form1()
+            public Form1()
         {
             InitializeComponent();
 
@@ -73,8 +73,12 @@ namespace TimerApp
             // Setare pozitie elemente pe centru
             labelTime.Left = (ClientSize.Width - labelTime.Width) / 2;
             labelTime.Top = (ClientSize.Height - labelTime.Height) / 4;
-            button1.Left = (ClientSize.Width - button1.Width) / 2;
-            button1.Top = (ClientSize.Height - button1.Height) / 2;
+            btn_start.Left = (ClientSize.Width - btn_start.Width) / 2;
+            btn_start.Top = (ClientSize.Height - btn_start.Height) / 2;
+            btn_hide.Left = (ClientSize.Width - btn_hide.Width) / 2;
+            btn_hide.Top = (ClientSize.Height - btn_hide.Height) / 2;
+            btn_exit.Left = (ClientSize.Width - btn_exit.Width) / 2;
+            btn_exit.Top = (ClientSize.Height - btn_exit.Height) * 3 / 4;
 
 
             FormClosing += Form1_FormClosing;
@@ -109,6 +113,7 @@ namespace TimerApp
                 inactivityTimer.Start();
                 inactivityTimer2.Start();
                 userTimer.Start();
+                this.WindowState = FormWindowState.Minimized;
             }
         }
 
@@ -145,18 +150,41 @@ namespace TimerApp
             inactivityTimer.Start();
             inactivityTimer2.Start();
             userTimer.Start();
-            button1.Visible = false;
+            btn_start.Visible = false;
             this.WindowState = FormWindowState.Minimized;
+            btn_hide.Visible = true;
+            btn_exit.Visible = true;
 
+        }
+        private void buttonHide_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        private void buttonExit_Click(object sender, EventArgs e)
+        {
+            using (var authForm = new AuthenticationForm(password))
+            {
+                var result = authForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    logFile.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
+                    logFile.Close();
+                    Application.Exit();
+                }
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            logFile.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
-            logFile.Close();
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+            }
         }
 
-        private Button button1;
         private Label labelTime;
+        private Button btn_start;
+        private Button btn_hide;
+        private Button btn_exit;
     }
 }
