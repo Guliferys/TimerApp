@@ -20,7 +20,8 @@ namespace TimerApp
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Name = "BackForm";
-            this.Opacity = 0.01D;
+            this.Opacity = 0.5D;
+            this.Load += new System.EventHandler(this.BackForm_Load);
             this.Click += new System.EventHandler(this.showForm1_Click);
             this.ResumeLayout(false);
 
