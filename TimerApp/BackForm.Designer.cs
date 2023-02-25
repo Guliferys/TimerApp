@@ -13,7 +13,7 @@ namespace TimerApp
 {
     public partial class BackForm : Form
     {
-        private bool _closingFromButton = false; // variabila globala pentru a verifica daca este permisa inchiderea
+        private bool _closeBackForm = false; // variabila globala pentru a verifica daca este permisa inchiderea
         
 
         public BackForm()
@@ -37,7 +37,7 @@ namespace TimerApp
 
         public void CloseBackForm()
         {
-            _closingFromButton = true;
+            _closeBackForm = true;
             this.Close();
         }
 
@@ -50,7 +50,7 @@ namespace TimerApp
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (!_closingFromButton) // verificam daca este perima inchiderea
+            if (!_closeBackForm) // verificam daca este perima inchiderea
             {
                 e.Cancel = true; // oprim inchiderea
             }

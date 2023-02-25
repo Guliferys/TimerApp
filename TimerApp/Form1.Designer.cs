@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace TimerApp
 {
@@ -29,11 +30,40 @@ namespace TimerApp
         private Point lastCursorPosition;                                 // Ultima pozitie mouse
         private bool _closeFrom1 = false;                                 // Verifica daca este permisa inchiderea app
 
-        [DllImport("user32.dll")]                                         // Pentru activitatea moseului                               
+        ///////////// Mouse TRACK ///////////////
+        [DllImport("user32.dll")]                                                                    
         public static extern bool SetForegroundWindow(IntPtr hWnd);
         private const int SW_RESTORE = 9;
 
+        //////////// KeyBoard BLOCK  /////////////
+        private const int WH_KEYBOARD_LL = 13;
+        private const int WM_KEYDOWN = 0x0100;
 
+        [StructLayout(LayoutKind.Sequential)]
+        private struct KBDLLHOOKSTRUCT
+        {
+            public uint vkCode;
+            public uint scanCode;
+            public uint flags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+        private static LowLevelKeyboardProc _proc = HookCallback;
+        private static IntPtr _hookID = IntPtr.Zero;
+
+        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string lpModuleName);
 
 
 
@@ -48,9 +78,11 @@ namespace TimerApp
             Form1_Design();
             Timer_Settings();
             AllScreenCover();
-
+            SetHook();
             //MessageBox.Show("Numele utilizatorului curent este: " + username);
+
         }
+
 
 
         public void Form1_Design()
@@ -70,7 +102,7 @@ namespace TimerApp
             btn_exit.Left = (ClientSize.Width - btn_exit.Width) / 2;
             btn_exit.Top = (ClientSize.Height - btn_exit.Height) * 3 / 4;
         }
-
+        
 
         ///////////////////////////////////////////////////////////////////
         ////////////////////////    TIMER    //////////////////////////////
@@ -249,6 +281,7 @@ namespace TimerApp
             btn_exit.Visible = true;
 
             this.WindowState = FormWindowState.Minimized;
+            Unhook(); // Deblocheaza tastatura
 
             foreach (BackForm form2 in _forms)
             {
@@ -279,6 +312,43 @@ namespace TimerApp
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
+        
+
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        ////////////////////    KeyBoard BLOCK    /////////////////////////
+        ///////////////////////////////////////////////////////////////////
+
+        // Functionalul dezactivarii tastaturii
+        private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+            {
+                // interziceți tasta apăsată
+                return (IntPtr)1;
+            }
+
+            // apelați următoarea metodă din lanțul de hook-uri
+            return CallNextHookEx(_hookID, nCode, wParam, lParam);
+        }
+
+        
+        private static void SetHook()  // Dezactiveaza tastatura
+        {
+            _hookID = SetWindowsHookEx(WH_KEYBOARD_LL, _proc, GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName), 0);
+        }
+
+        private static void Unhook()  // Activeaza Tastatura
+        {
+            UnhookWindowsHookEx(_hookID);
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+
 
         public void CloseBackForm()
         {
