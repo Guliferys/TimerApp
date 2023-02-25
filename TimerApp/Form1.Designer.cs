@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace TimerApp
 {
     public partial class Form1 : Form
     {
-
         private List<BackForm> _forms = new List<BackForm>();             // Lista cu instantele BackForm
         private Timer inactivityTimer = new Timer();
         private Timer inactivityTimer2 = new Timer();
@@ -92,17 +92,40 @@ namespace TimerApp
             this.FormBorderStyle = FormBorderStyle.None;             // Redimensionează fereastra aplicației
             this.TopMost = true;
 
-            //Elements Design
-            labelTime.Left = (ClientSize.Width - labelTime.Width) / 2;
-            labelTime.Top = (ClientSize.Height - labelTime.Height) / 4;
-            btn_start.Left = (ClientSize.Width - btn_start.Width) / 2;
-            btn_start.Top = (ClientSize.Height - btn_start.Height) / 2;
-            btn_hide.Left = (ClientSize.Width - btn_hide.Width) / 2;
-            btn_hide.Top = (ClientSize.Height - btn_hide.Height) / 2;
-            btn_exit.Left = (ClientSize.Width - btn_exit.Width) / 2;
-            btn_exit.Top = (ClientSize.Height - btn_exit.Height) * 3 / 4;
+            this.BackColor = Color.FromArgb(100, 100, 100);
+            this.TransparencyKey = Color.FromArgb(100, 100, 100);
+           
+            labelTime.BackColor = Color.Transparent;
+            //labelTime.ForeColor = Color.Transparent; // setează culoarea textului la roșu
+
+            this.BackgroundImage = Image.FromFile(@"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\bg.png");
+            this.BackgroundImageLayout = ImageLayout.Stretch;
+
+            //HidePictureBoxBTN.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\close.png";
+
+            HidePictureBox.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\hide.png";
+            HidePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            HidePictureBox.BackColor = Color.Transparent;
+
+            ClosePictureBox.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\close.png";
+            ClosePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            ClosePictureBox.BackColor = Color.Transparent;
+
+            StartPictureBox.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\start.png";
+            StartPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            StartPictureBox.BackColor = Color.Transparent;
+
         }
-        
+
+        private void onImage_MouseEnter(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Hand;
+        }
+
+        private void onImage_MouseLeave(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Default;
+        }
 
         ///////////////////////////////////////////////////////////////////
         ////////////////////////    TIMER    //////////////////////////////
@@ -276,9 +299,9 @@ namespace TimerApp
             inactivityTimer.Start();
             inactivityTimer2.Start();
 
-            btn_start.Visible = false;
-            btn_hide.Visible = true;
-            btn_exit.Visible = true;
+            StartPictureBox.Visible = false;
+            HidePictureBox.Visible = true;
+            ClosePictureBox.Visible = true;
 
             this.WindowState = FormWindowState.Minimized;
             Unhook(); // Deblocheaza tastatura
@@ -373,8 +396,8 @@ namespace TimerApp
 
 
         private Label labelTime;
-        private Button btn_start;
-        private Button btn_hide;
-        private Button btn_exit;
+        private PictureBox HidePictureBox;
+        private PictureBox ClosePictureBox;
+        private PictureBox StartPictureBox;
     }
 }

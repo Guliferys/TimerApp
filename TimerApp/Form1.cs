@@ -15,69 +15,75 @@ namespace TimerApp
 
         private void InitializeComponent()
         {
-            this.btn_start = new System.Windows.Forms.Button();
             this.labelTime = new System.Windows.Forms.Label();
-            this.btn_hide = new System.Windows.Forms.Button();
-            this.btn_exit = new System.Windows.Forms.Button();
+            this.HidePictureBox = new System.Windows.Forms.PictureBox();
+            this.ClosePictureBox = new System.Windows.Forms.PictureBox();
+            this.StartPictureBox = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btn_start
-            // 
-            this.btn_start.Font = new System.Drawing.Font("Segoe UI Semibold", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_start.Location = new System.Drawing.Point(22, 162);
-            this.btn_start.Name = "btn_start";
-            this.btn_start.Size = new System.Drawing.Size(112, 40);
-            this.btn_start.TabIndex = 0;
-            this.btn_start.Text = "Start";
-            this.btn_start.UseVisualStyleBackColor = true;
-            this.btn_start.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // labelTime
             // 
             this.labelTime.AutoSize = true;
             this.labelTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTime.Location = new System.Drawing.Point(59, 48);
+            this.labelTime.Location = new System.Drawing.Point(167, 213);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(174, 46);
             this.labelTime.TabIndex = 1;
             this.labelTime.Text = "00:00:00";
             // 
-            // btn_hide
+            // HidePictureBox
             // 
-            this.btn_hide.Font = new System.Drawing.Font("Segoe UI Semibold", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_hide.Location = new System.Drawing.Point(150, 162);
-            this.btn_hide.Name = "btn_hide";
-            this.btn_hide.Size = new System.Drawing.Size(112, 40);
-            this.btn_hide.TabIndex = 2;
-            this.btn_hide.Text = "Hide";
-            this.btn_hide.UseVisualStyleBackColor = true;
-            this.btn_hide.Visible = false;
-            this.btn_hide.Click += new System.EventHandler(this.buttonHide_Click);
+            this.HidePictureBox.Location = new System.Drawing.Point(216, 278);
+            this.HidePictureBox.Name = "HidePictureBox";
+            this.HidePictureBox.Size = new System.Drawing.Size(34, 29);
+            this.HidePictureBox.TabIndex = 4;
+            this.HidePictureBox.TabStop = false;
+            this.HidePictureBox.Visible = false;
+            this.HidePictureBox.Click += new System.EventHandler(this.buttonHide_Click);
+            this.HidePictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
+            this.HidePictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
-            // btn_exit
+            // ClosePictureBox
             // 
-            this.btn_exit.Font = new System.Drawing.Font("Segoe UI Semibold", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_exit.Location = new System.Drawing.Point(80, 209);
-            this.btn_exit.Name = "btn_exit";
-            this.btn_exit.Size = new System.Drawing.Size(112, 40);
-            this.btn_exit.TabIndex = 3;
-            this.btn_exit.Text = "Exit";
-            this.btn_exit.UseVisualStyleBackColor = true;
-            this.btn_exit.Visible = false;
-            this.btn_exit.Click += new System.EventHandler(this.buttonExit_Click);
+            this.ClosePictureBox.Location = new System.Drawing.Point(265, 278);
+            this.ClosePictureBox.Name = "ClosePictureBox";
+            this.ClosePictureBox.Size = new System.Drawing.Size(34, 29);
+            this.ClosePictureBox.TabIndex = 5;
+            this.ClosePictureBox.TabStop = false;
+            this.ClosePictureBox.Visible = false;
+            this.ClosePictureBox.Click += new System.EventHandler(this.buttonExit_Click);
+            this.ClosePictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
+            this.ClosePictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
+            // 
+            // StartPictureBox
+            // 
+            this.StartPictureBox.Location = new System.Drawing.Point(232, 278);
+            this.StartPictureBox.Name = "StartPictureBox";
+            this.StartPictureBox.Size = new System.Drawing.Size(45, 41);
+            this.StartPictureBox.TabIndex = 6;
+            this.StartPictureBox.TabStop = false;
+            this.StartPictureBox.Click += new System.EventHandler(this.buttonStart_Click);
+            this.StartPictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
+            this.StartPictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.btn_exit);
-            this.Controls.Add(this.btn_hide);
+            this.ClientSize = new System.Drawing.Size(498, 462);
+            this.Controls.Add(this.StartPictureBox);
+            this.Controls.Add(this.ClosePictureBox);
+            this.Controls.Add(this.HidePictureBox);
             this.Controls.Add(this.labelTime);
-            this.Controls.Add(this.btn_start);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.TopMost = true;
+            ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

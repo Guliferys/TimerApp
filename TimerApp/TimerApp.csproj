@@ -104,6 +104,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="stopwatch.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
