@@ -15,6 +15,7 @@ namespace TimerApp
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.labelTime = new System.Windows.Forms.Label();
             this.HidePictureBox = new System.Windows.Forms.PictureBox();
             this.ClosePictureBox = new System.Windows.Forms.PictureBox();
@@ -77,9 +78,11 @@ namespace TimerApp
             this.Controls.Add(this.HidePictureBox);
             this.Controls.Add(this.labelTime);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Stopwatch";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).EndInit();

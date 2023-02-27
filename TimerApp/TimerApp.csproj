@@ -103,10 +103,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="images\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="images\bg.png" />
+    <Content Include="images\close.png" />
+    <Content Include="images\hide.png" />
+    <Content Include="images\start.png" />
+    <Content Include="images\stopwatch.ico" />
     <Content Include="stopwatch.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

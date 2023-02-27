@@ -30,6 +30,7 @@ namespace TimerApp
         private Point lastCursorPosition;                                 // Ultima pozitie mouse
         private bool _closeFrom1 = false;                                 // Verifica daca este permisa inchiderea app
 
+
         ///////////// Mouse TRACK ///////////////
         [DllImport("user32.dll")]                                                                    
         public static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -98,24 +99,31 @@ namespace TimerApp
             labelTime.BackColor = Color.Transparent;
             //labelTime.ForeColor = Color.Transparent; // setează culoarea textului la roșu
 
-            this.BackgroundImage = Image.FromFile(@"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\bg.png");
+            this.BackgroundImage = Image.FromFile(Path.Combine("images", "bg.png"));
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             //HidePictureBoxBTN.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\close.png";
 
-            HidePictureBox.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\hide.png";
+
+            HidePictureBox.ImageLocation = Path.Combine("images", "hide.png");
             HidePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             HidePictureBox.BackColor = Color.Transparent;
 
-            ClosePictureBox.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\close.png";
+            ClosePictureBox.ImageLocation = Path.Combine("images", "close.png");
             ClosePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             ClosePictureBox.BackColor = Color.Transparent;
 
-            StartPictureBox.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\start.png";
+            StartPictureBox.ImageLocation = Path.Combine("images", "start.png");
             StartPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             StartPictureBox.BackColor = Color.Transparent;
 
         }
+
+
+        ///////////////////////////////////////////////////////////////////
+        ////////////////////////    MOUSE    //////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+
 
         private void onImage_MouseEnter(object sender, EventArgs e)
         {
@@ -191,8 +199,7 @@ namespace TimerApp
         private void LogTimer_Tick(object sender, EventArgs e)
         {
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Cronometrul arata: {hours:00}:{minutes:00}:{seconds:00}";
-            logFile.WriteLine(logMessage);
-            logFile.Flush();
+            LogToFile(logMessage);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -285,14 +292,12 @@ namespace TimerApp
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            // Creem fisier-ul log
-            string logFileName = $"cronometru-log-{DateTime.Now:yyyyMMdd-HHmmss}.txt";
-            logFile = new StreamWriter(logFileName, append: true);
+            //logFile = new StreamWriter(logFileName, append: true);            
+            //File.WriteAllText(logFilePath, logMessage);
 
             string username = identity.Name;
-            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!";
-            logFile.WriteLine(logMessage);
-            logFile.Flush();
+            //string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!";
+            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!");
 
             stopwatchTimer.Start();
             logTimer.Start();
@@ -335,7 +340,42 @@ namespace TimerApp
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
-        
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        //////////////////////    LOG FUNCTION    /////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        public void LogToFile(string logMessage)
+        {
+            string logsFolderPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "logs");
+            string logFileName = $"cronometru-log-{DateTime.Now:yyyyMMdd}.txt";
+            string logFilePath = Path.Combine(logsFolderPath, logFileName);
+
+            logsFolderPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "logs");
+            if (!Directory.Exists(logsFolderPath))
+            {
+                Directory.CreateDirectory(logsFolderPath);
+            }
+            if (!File.Exists(logFilePath))
+            {
+                // Dacă fișierul nu există, îl cream
+                File.Create(logFilePath).Dispose();
+            }
+
+            using (StreamWriter logFile = new StreamWriter(logFilePath, true))
+            {
+                logFile.WriteLine(logMessage);
+                logFile.Flush();
+            }
+        }
+
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+
 
 
 
@@ -375,9 +415,7 @@ namespace TimerApp
 
         public void CloseBackForm()
         {
-            logFile.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
-            logFile.Flush();
-            logFile.Close();
+            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
 
             _closeFrom1 = true;
             this.Close();
