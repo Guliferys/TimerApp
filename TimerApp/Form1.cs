@@ -20,9 +20,13 @@ namespace TimerApp
             this.HidePictureBox = new System.Windows.Forms.PictureBox();
             this.ClosePictureBox = new System.Windows.Forms.PictureBox();
             this.StartPictureBox = new System.Windows.Forms.PictureBox();
+            this.SettingsPictureBox = new System.Windows.Forms.PictureBox();
+            this.PausePictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PausePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // labelTime
@@ -37,7 +41,7 @@ namespace TimerApp
             // 
             // HidePictureBox
             // 
-            this.HidePictureBox.Location = new System.Drawing.Point(216, 278);
+            this.HidePictureBox.Location = new System.Drawing.Point(191, 278);
             this.HidePictureBox.Name = "HidePictureBox";
             this.HidePictureBox.Size = new System.Drawing.Size(34, 29);
             this.HidePictureBox.TabIndex = 4;
@@ -49,7 +53,7 @@ namespace TimerApp
             // 
             // ClosePictureBox
             // 
-            this.ClosePictureBox.Location = new System.Drawing.Point(265, 278);
+            this.ClosePictureBox.Location = new System.Drawing.Point(273, 278);
             this.ClosePictureBox.Name = "ClosePictureBox";
             this.ClosePictureBox.Size = new System.Drawing.Size(34, 29);
             this.ClosePictureBox.TabIndex = 5;
@@ -61,18 +65,42 @@ namespace TimerApp
             // 
             // StartPictureBox
             // 
-            this.StartPictureBox.Location = new System.Drawing.Point(232, 278);
+            this.StartPictureBox.Location = new System.Drawing.Point(225, 278);
             this.StartPictureBox.Name = "StartPictureBox";
-            this.StartPictureBox.Size = new System.Drawing.Size(45, 41);
+            this.StartPictureBox.Size = new System.Drawing.Size(49, 41);
             this.StartPictureBox.TabIndex = 6;
             this.StartPictureBox.TabStop = false;
             this.StartPictureBox.Click += new System.EventHandler(this.buttonStart_Click);
             this.StartPictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
             this.StartPictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
+            // SettingsPictureBox
+            // 
+            this.SettingsPictureBox.Location = new System.Drawing.Point(273, 142);
+            this.SettingsPictureBox.Name = "SettingsPictureBox";
+            this.SettingsPictureBox.Size = new System.Drawing.Size(53, 47);
+            this.SettingsPictureBox.TabIndex = 7;
+            this.SettingsPictureBox.TabStop = false;
+            this.SettingsPictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
+            this.SettingsPictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
+            // 
+            // PausePictureBox
+            // 
+            this.PausePictureBox.Location = new System.Drawing.Point(233, 278);
+            this.PausePictureBox.Name = "PausePictureBox";
+            this.PausePictureBox.Size = new System.Drawing.Size(34, 29);
+            this.PausePictureBox.TabIndex = 8;
+            this.PausePictureBox.TabStop = false;
+            this.PausePictureBox.Visible = false;
+            this.PausePictureBox.Click += new System.EventHandler(this.buttonPause_Click);
+            this.PausePictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
+            this.PausePictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(498, 462);
+            this.Controls.Add(this.PausePictureBox);
+            this.Controls.Add(this.SettingsPictureBox);
             this.Controls.Add(this.StartPictureBox);
             this.Controls.Add(this.ClosePictureBox);
             this.Controls.Add(this.HidePictureBox);
@@ -87,6 +115,8 @@ namespace TimerApp
             ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PausePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

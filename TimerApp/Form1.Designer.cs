@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Threading.Tasks;
 
 namespace TimerApp
 {
@@ -23,7 +24,8 @@ namespace TimerApp
         private int seconds = 0;
         private int minutes = 0;
         private int hours = 0;
-        private StreamWriter logFile;                                     // Fisierul cu loguri
+        bool isPaused = true;
+        //private StreamWriter logFile;                                     // Fisierul cu loguri
         WindowsIdentity identity = WindowsIdentity.GetCurrent();          // Numele utilizatorului 
         private const string password = "parola";                         // Parola pnt Auth
         public static Form1 form1Instance;                                // Instanta Form1
@@ -113,9 +115,17 @@ namespace TimerApp
             ClosePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             ClosePictureBox.BackColor = Color.Transparent;
 
+            PausePictureBox.ImageLocation = Path.Combine("images", "pause.png");
+            PausePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            PausePictureBox.BackColor = Color.Transparent;
+
             StartPictureBox.ImageLocation = Path.Combine("images", "start.png");
             StartPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             StartPictureBox.BackColor = Color.Transparent;
+
+            SettingsPictureBox.ImageLocation = Path.Combine("images", "settings.png");
+            SettingsPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            SettingsPictureBox.BackColor = Color.Transparent;
 
         }
 
@@ -173,19 +183,20 @@ namespace TimerApp
             }
         }
 
-        private void inactivityTimer2_Tick(object sender, EventArgs e)
+        private async void inactivityTimer2_Tick(object sender, EventArgs e)
         {
             inactivityTimer.Stop();
             inactivityTimer2.Stop();
             stopwatchTimer.Stop();
-            // Afișăm un mesaj de avertizare cu MessageBox
-            DialogResult result = MessageBox.Show(
-                "Confirmați că sunteți pe loc!",
-                "Inactivitate detectată",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly);
+
+            DialogResult result = await Task.Run(() => MessageBox.Show(
+            "Confirmați că sunteți pe loc!",
+            "Inactivitate detectată",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information,
+            MessageBoxDefaultButton.Button1,
+            MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly));
+            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} INACTIVITATE DETECTATA!");
 
             if (result == DialogResult.OK)
             {
@@ -193,6 +204,7 @@ namespace TimerApp
                 inactivityTimer2.Start();
                 stopwatchTimer.Start();
                 this.WindowState = FormWindowState.Minimized;
+                LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} ACTIVITATE CONFIRMATA!");
             }
         }
 
@@ -297,7 +309,7 @@ namespace TimerApp
 
             string username = identity.Name;
             //string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!";
-            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!");
+            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} START!");
 
             stopwatchTimer.Start();
             logTimer.Start();
@@ -307,6 +319,7 @@ namespace TimerApp
             StartPictureBox.Visible = false;
             HidePictureBox.Visible = true;
             ClosePictureBox.Visible = true;
+            PausePictureBox.Visible = true;
 
             this.WindowState = FormWindowState.Minimized;
             Unhook(); // Deblocheaza tastatura
@@ -324,6 +337,28 @@ namespace TimerApp
             this.WindowState = FormWindowState.Minimized;
         }
 
+        private void buttonPause_Click(object sender, EventArgs e)
+        {
+            if (isPaused)
+            {
+                stopwatchTimer.Stop();
+                //logTimer.Stop();
+                inactivityTimer.Stop();
+                inactivityTimer2.Stop();
+                isPaused = false;
+                LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} PAUSE!");
+            }
+            else
+            {
+                stopwatchTimer.Start();
+                //logTimer.Start();
+                inactivityTimer.Start();
+                inactivityTimer2.Start();
+                isPaused = true;
+                LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} RESUME!");
+            }
+        }
+
         private void buttonExit_Click(object sender, EventArgs e)
         {
             using (var authForm = new AuthForm(password))
@@ -337,6 +372,8 @@ namespace TimerApp
             }
         }
 
+
+
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
@@ -348,6 +385,7 @@ namespace TimerApp
         ///////////////////////////////////////////////////////////////////
         //////////////////////    LOG FUNCTION    /////////////////////////
         ///////////////////////////////////////////////////////////////////
+        
         public void LogToFile(string logMessage)
         {
             string logsFolderPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "logs");
@@ -437,5 +475,7 @@ namespace TimerApp
         private PictureBox HidePictureBox;
         private PictureBox ClosePictureBox;
         private PictureBox StartPictureBox;
+        private PictureBox SettingsPictureBox;
+        private PictureBox PausePictureBox;
     }
 }
