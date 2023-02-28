@@ -189,6 +189,8 @@ namespace TimerApp
             inactivityTimer2.Stop();
             stopwatchTimer.Stop();
 
+            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} INACTIVITATE DETECTATA!");
+
             DialogResult result = await Task.Run(() => MessageBox.Show(
             "Confirmați că sunteți pe loc!",
             "Inactivitate detectată",
@@ -196,7 +198,6 @@ namespace TimerApp
             MessageBoxIcon.Information,
             MessageBoxDefaultButton.Button1,
             MessageBoxOptions.ServiceNotification | MessageBoxOptions.DefaultDesktopOnly));
-            LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} INACTIVITATE DETECTATA!");
 
             if (result == DialogResult.OK)
             {
@@ -372,7 +373,19 @@ namespace TimerApp
             }
         }
 
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            using (var authForm = new AuthForm(password))
+            {
+                var result = authForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    SettingsForm settings = new SettingsForm();
+                    settings.Show();
 
+                }
+            }
+        }
 
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////

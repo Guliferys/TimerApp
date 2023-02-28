@@ -81,6 +81,7 @@ namespace TimerApp
             this.SettingsPictureBox.Size = new System.Drawing.Size(53, 47);
             this.SettingsPictureBox.TabIndex = 7;
             this.SettingsPictureBox.TabStop = false;
+            this.SettingsPictureBox.Click += new System.EventHandler(this.buttonSettings_Click);
             this.SettingsPictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
             this.SettingsPictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
