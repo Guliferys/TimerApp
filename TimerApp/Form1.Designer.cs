@@ -25,7 +25,7 @@ namespace TimerApp
         private int minutes = 0;
         private int hours = 0;
         bool isPaused = true;
-        //private StreamWriter logFile;                                     // Fisierul cu loguri
+        //private StreamWriter logFile;                                   // Fisierul cu loguri
         WindowsIdentity identity = WindowsIdentity.GetCurrent();          // Numele utilizatorului 
         private const string password = "parola";                         // Parola pnt Auth
         public static Form1 form1Instance;                                // Instanta Form1
@@ -82,6 +82,7 @@ namespace TimerApp
             Timer_Settings();
             AllScreenCover();
             SetHook();
+
             //MessageBox.Show("Numele utilizatorului curent este: " + username);
 
         }
@@ -101,29 +102,32 @@ namespace TimerApp
             labelTime.BackColor = Color.Transparent;
             //labelTime.ForeColor = Color.Transparent; // setează culoarea textului la roșu
 
-            this.BackgroundImage = Image.FromFile(Path.Combine("images", "bg.png"));
+            //this.BackgroundImage = Image.FromFile(Path.Combine("images", "bg.png"));
+            this.BackgroundImage = Properties.Resources.bg;
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             //HidePictureBoxBTN.ImageLocation = @"C:\Users\gulif\source\repos\TimerApp\TimerApp\images\close.png";
 
 
-            HidePictureBox.ImageLocation = Path.Combine("images", "hide.png");
+            //HidePictureBox.ImageLocation = Path.Combine("images", "hide.png");
+            HidePictureBox.Image = Properties.Resources.hide;
             HidePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             HidePictureBox.BackColor = Color.Transparent;
 
-            ClosePictureBox.ImageLocation = Path.Combine("images", "close.png");
+            //ClosePictureBox.ImageLocation = Path.Combine("images", "close.png");
+            ClosePictureBox.Image = Properties.Resources.close;
             ClosePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             ClosePictureBox.BackColor = Color.Transparent;
 
-            PausePictureBox.ImageLocation = Path.Combine("images", "pause.png");
+            PausePictureBox.Image = Properties.Resources.pause;
             PausePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             PausePictureBox.BackColor = Color.Transparent;
 
-            StartPictureBox.ImageLocation = Path.Combine("images", "start.png");
+            StartPictureBox.Image = Properties.Resources.start;
             StartPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             StartPictureBox.BackColor = Color.Transparent;
 
-            SettingsPictureBox.ImageLocation = Path.Combine("images", "settings.png");
+            SettingsPictureBox.Image = Properties.Resources.settings;
             SettingsPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             SettingsPictureBox.BackColor = Color.Transparent;
 
