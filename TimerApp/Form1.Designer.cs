@@ -11,6 +11,9 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
+using System.Globalization;
 
 namespace TimerApp
 {
@@ -31,6 +34,7 @@ namespace TimerApp
         public static Form1 form1Instance;                                // Instanta Form1
         private Point lastCursorPosition;                                 // Ultima pozitie mouse
         private bool _closeFrom1 = false;                                 // Verifica daca este permisa inchiderea app
+        public int userID = 0;
 
 
         ///////////// Mouse TRACK ///////////////
@@ -78,15 +82,19 @@ namespace TimerApp
             lastCursorPosition = Cursor.Position;                  // Inițializăm ultimele coordonate ale mouse-ului cu poziția curentă
             FormClosing += Form1_FormClosing;                      // 'Form1_FormClosing' sa fie apelat la inchiderea aplicatiei
 
-            Form1_Design();
-            Timer_Settings();
+
             AllScreenCover();
             SetHook();
-
+            
             //MessageBox.Show("Numele utilizatorului curent este: " + username);
-
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Form1_Design();
+            Timer_Settings();
+            CheckTimer();
+        }
 
 
         public void Form1_Design()
@@ -134,20 +142,8 @@ namespace TimerApp
         }
 
 
-        ///////////////////////////////////////////////////////////////////
-        ////////////////////////    MOUSE    //////////////////////////////
-        ///////////////////////////////////////////////////////////////////
 
 
-        private void onImage_MouseEnter(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.Hand;
-        }
-
-        private void onImage_MouseLeave(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.Default;
-        }
 
         ///////////////////////////////////////////////////////////////////
         ////////////////////////    TIMER    //////////////////////////////
@@ -217,6 +213,11 @@ namespace TimerApp
         {
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Cronometrul arata: {hours:00}:{minutes:00}:{seconds:00}";
             LogToFile(logMessage);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SaveTimer();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -335,7 +336,7 @@ namespace TimerApp
                 //form2.Close();
                 form2.CloseBackForm();
             }
-         }
+        }
 
         private void buttonHide_Click(object sender, EventArgs e)
         {
@@ -400,7 +401,7 @@ namespace TimerApp
 
 
         ///////////////////////////////////////////////////////////////////
-        //////////////////////    LOG FUNCTION    /////////////////////////
+        ////////////////    LOG FUNCTION / TIMER    ///////////////////////
         ///////////////////////////////////////////////////////////////////
         
         public void LogToFile(string logMessage)
@@ -426,6 +427,54 @@ namespace TimerApp
                 logFile.Flush();
             }
         }
+
+
+        public void CheckTimer()
+        {
+            MessageBox.Show("userID = " + userID);
+            DB db = new DB();
+            db.openConnection();
+            string sql = "SELECT timer FROM timer WHERE UserID = @id AND data = @today ORDER BY id DESC LIMIT 1";
+            MySqlCommand cmd = new MySqlCommand(sql, db.getConnection());
+            cmd.Parameters.AddWithValue("@id", userID);
+            cmd.Parameters.AddWithValue("@today", DateTime.Today);
+            object result = cmd.ExecuteScalar();
+            if (result != null)
+            {
+
+                string timeString = result.ToString();
+                TimeSpan time;
+                if (TimeSpan.TryParseExact(timeString, "hh\\:mm\\:ss", CultureInfo.InvariantCulture, out time))
+                {
+                    hours = time.Hours;
+                    minutes = time.Minutes;
+                    seconds = time.Seconds;
+                }
+                else { MessageBox.Show("valoarea string nu este în formatul așteptat"); }                   // tratarea cazului în care valoarea string nu este în formatul așteptat
+
+                labelTime.Text = $"{hours:00}:{minutes:00}:{seconds:00}"; 
+
+                //int timer = Convert.ToInt32(result);
+            }
+            else { MessageBox.Show("Baza de date este goală"); }
+            db.closeConnection();
+        }
+
+        public void SaveTimer()
+        {
+            DB db = new DB();
+            string query = "INSERT INTO timer (UserID, data, time, timer) VALUES (@UserID, @data, @time, @timer)";
+            MySqlCommand command = new MySqlCommand(query, db.getConnection());
+            command.Parameters.AddWithValue("@UserID", userID);
+            command.Parameters.AddWithValue("@data", DateTime.Now.ToString("yyyy-MM-dd"));
+            command.Parameters.AddWithValue("@time", DateTime.Now.ToString("HH:mm:ss"));
+            command.Parameters.AddWithValue("@timer", $"{ hours:00}:{minutes:00}:{seconds:00}");
+
+            db.openConnection();
+            command.ExecuteNonQuery();
+            db.closeConnection();
+        }
+
 
         ///////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
@@ -468,6 +517,8 @@ namespace TimerApp
         ///////////////////////////////////////////////////////////////////
 
 
+
+
         public void CloseBackForm()
         {
             LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
@@ -488,11 +539,13 @@ namespace TimerApp
         }
 
 
+
         private Label labelTime;
         private PictureBox HidePictureBox;
         private PictureBox ClosePictureBox;
         private PictureBox StartPictureBox;
         private PictureBox SettingsPictureBox;
         private PictureBox PausePictureBox;
+        private Button button1;
     }
 }

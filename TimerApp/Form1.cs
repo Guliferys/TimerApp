@@ -22,6 +22,7 @@ namespace TimerApp
             this.StartPictureBox = new System.Windows.Forms.PictureBox();
             this.SettingsPictureBox = new System.Windows.Forms.PictureBox();
             this.PausePictureBox = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).BeginInit();
@@ -48,8 +49,6 @@ namespace TimerApp
             this.HidePictureBox.TabStop = false;
             this.HidePictureBox.Visible = false;
             this.HidePictureBox.Click += new System.EventHandler(this.buttonHide_Click);
-            this.HidePictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
-            this.HidePictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
             // ClosePictureBox
             // 
@@ -60,8 +59,6 @@ namespace TimerApp
             this.ClosePictureBox.TabStop = false;
             this.ClosePictureBox.Visible = false;
             this.ClosePictureBox.Click += new System.EventHandler(this.buttonExit_Click);
-            this.ClosePictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
-            this.ClosePictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
             // StartPictureBox
             // 
@@ -71,8 +68,6 @@ namespace TimerApp
             this.StartPictureBox.TabIndex = 6;
             this.StartPictureBox.TabStop = false;
             this.StartPictureBox.Click += new System.EventHandler(this.buttonStart_Click);
-            this.StartPictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
-            this.StartPictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
             // SettingsPictureBox
             // 
@@ -82,8 +77,6 @@ namespace TimerApp
             this.SettingsPictureBox.TabIndex = 7;
             this.SettingsPictureBox.TabStop = false;
             this.SettingsPictureBox.Click += new System.EventHandler(this.buttonSettings_Click);
-            this.SettingsPictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
-            this.SettingsPictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
             // 
             // PausePictureBox
             // 
@@ -94,12 +87,21 @@ namespace TimerApp
             this.PausePictureBox.TabStop = false;
             this.PausePictureBox.Visible = false;
             this.PausePictureBox.Click += new System.EventHandler(this.buttonPause_Click);
-            this.PausePictureBox.MouseEnter += new System.EventHandler(this.onImage_MouseEnter);
-            this.PausePictureBox.MouseLeave += new System.EventHandler(this.onImage_MouseLeave);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(213, 325);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(498, 462);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.PausePictureBox);
             this.Controls.Add(this.SettingsPictureBox);
             this.Controls.Add(this.StartPictureBox);
@@ -113,6 +115,7 @@ namespace TimerApp
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Stopwatch";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).EndInit();
