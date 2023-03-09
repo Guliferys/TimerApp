@@ -93,6 +93,7 @@ namespace TimerApp
         {
             Form1_Design();
             Timer_Settings();
+
             CheckTimer();
         }
 
@@ -215,7 +216,7 @@ namespace TimerApp
             LogToFile(logMessage);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn_SaveLogs_Click(object sender, EventArgs e)
         {
             SaveTimer();
         }
@@ -314,6 +315,9 @@ namespace TimerApp
             //File.WriteAllText(logFilePath, logMessage);
 
             string username = identity.Name;
+
+            StartTime();
+
             //string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} a pornit cronometru!";
             LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {username} START!");
 
@@ -380,16 +384,15 @@ namespace TimerApp
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            using (var authForm = new AuthForm(password))
-            {
-                var result = authForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    SettingsForm settings = new SettingsForm();
-                    settings.Show();
+            MessageBox.Show("N-am functional");
+        }
 
-                }
-            }
+        private void LogOut_Click(object sender, EventArgs e)
+        {
+            LoginForm loginForm = new LoginForm(); // creați o instanță nouă a Form2
+            loginForm.Show(); // afișați Form2
+            CloseBackForm();
+            //this.Close(); // ascundeți forma curentă
         }
 
         ///////////////////////////////////////////////////////////////////
@@ -403,7 +406,7 @@ namespace TimerApp
         ///////////////////////////////////////////////////////////////////
         ////////////////    LOG FUNCTION / TIMER    ///////////////////////
         ///////////////////////////////////////////////////////////////////
-        
+
         public void LogToFile(string logMessage)
         {
             string logsFolderPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "logs");
@@ -434,14 +437,14 @@ namespace TimerApp
             MessageBox.Show("userID = " + userID);
             DB db = new DB();
             db.openConnection();
-            string sql = "SELECT timer FROM timer WHERE UserID = @id AND data = @today ORDER BY id DESC LIMIT 1";
+            //Verifica data user-ul are loguri in campul timer
+            string sql = "SELECT timer FROM log WHERE UserID = @id AND data = @today ORDER BY id DESC LIMIT 1";
             MySqlCommand cmd = new MySqlCommand(sql, db.getConnection());
             cmd.Parameters.AddWithValue("@id", userID);
             cmd.Parameters.AddWithValue("@today", DateTime.Today);
             object result = cmd.ExecuteScalar();
             if (result != null)
             {
-
                 string timeString = result.ToString();
                 TimeSpan time;
                 if (TimeSpan.TryParseExact(timeString, "hh\\:mm\\:ss", CultureInfo.InvariantCulture, out time))
@@ -450,28 +453,84 @@ namespace TimerApp
                     minutes = time.Minutes;
                     seconds = time.Seconds;
                 }
-                else { MessageBox.Show("valoarea string nu este în formatul așteptat"); }                   // tratarea cazului în care valoarea string nu este în formatul așteptat
+                else { MessageBox.Show("timer is null"); }                   // tratarea cazului în care valoarea string nu este în formatul așteptat
 
                 labelTime.Text = $"{hours:00}:{minutes:00}:{seconds:00}"; 
 
                 //int timer = Convert.ToInt32(result);
             }
-            else { MessageBox.Show("Baza de date este goală"); }
+            else { }
             db.closeConnection();
         }
 
         public void SaveTimer()
         {
+
             DB db = new DB();
-            string query = "INSERT INTO timer (UserID, data, time, timer) VALUES (@UserID, @data, @time, @timer)";
+
+            // interogarea SQL pentru a verifica dacă există o înregistrare în tabelul log din data de azi
+            db.openConnection();
+            string query = "SELECT * FROM log WHERE DATE(data) = @data AND UserID = @userID ORDER BY id DESC LIMIT 1;";
+            MySqlCommand command = new MySqlCommand(query, db.getConnection());
+            command.Parameters.AddWithValue("@userID", userID);
+            command.Parameters.AddWithValue("@data", DateTime.Now.ToString("yyyy-MM-dd"));
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                // Dacă există rezultate, actualizează valorile pentru coloanele time și timer
+                reader.Read();
+                int id = reader.GetInt32("id");
+
+                // Actualizează valorile în baza de date
+                query = "UPDATE log SET end_time=@end_time, timer=@timer WHERE id=@id";
+                command = new MySqlCommand(query, db.getConnection());
+                command.Parameters.AddWithValue("@end_time", DateTime.Now.ToString("HH:mm:ss"));
+                command.Parameters.AddWithValue("@timer", $"{ hours:00}:{minutes:00}:{seconds:00}");
+                command.Parameters.AddWithValue("@id", id);
+                reader.Close();
+                command.ExecuteNonQuery();
+            }
+            else
+            {
+                // dacă nu există o înregistrare, se inserează o nouă înregistrare
+                string query2 = "INSERT INTO log (UserID, data, start_time, timer) VALUES (@UserID, @data, @start_time, @timer)";
+                MySqlCommand command2 = new MySqlCommand(query2, db.getConnection());
+                command2.Parameters.AddWithValue("@UserID", userID);
+                command2.Parameters.AddWithValue("@data", DateTime.Now.ToString("yyyy-MM-dd"));
+                command2.Parameters.AddWithValue("@start_time", DateTime.Now.Subtract(new TimeSpan(hours, minutes, seconds)).ToString("HH:mm:ss"));
+                command2.Parameters.AddWithValue("@timer", $"{ hours:00}:{minutes:00}:{seconds:00}");
+                reader.Close();
+                command2.ExecuteNonQuery();
+            }
+
+            reader.Close();
+            db.closeConnection();
+
+        }
+
+        public void StartTime()
+        {
+            DB db = new DB();
+            db.openConnection();
+            string query = "SELECT COUNT(*) FROM log WHERE UserID = @UserID AND DATE(data) = @data";
             MySqlCommand command = new MySqlCommand(query, db.getConnection());
             command.Parameters.AddWithValue("@UserID", userID);
             command.Parameters.AddWithValue("@data", DateTime.Now.ToString("yyyy-MM-dd"));
-            command.Parameters.AddWithValue("@time", DateTime.Now.ToString("HH:mm:ss"));
-            command.Parameters.AddWithValue("@timer", $"{ hours:00}:{minutes:00}:{seconds:00}");
+            int count = Convert.ToInt32(command.ExecuteScalar());
 
-            db.openConnection();
-            command.ExecuteNonQuery();
+            if (count > 0) { }
+            else
+            {
+                string query2 = "INSERT INTO log (UserID, data, start_time) VALUES (@UserID, @data, @start_time)";
+                MySqlCommand command2 = new MySqlCommand(query2, db.getConnection());
+                command2.Parameters.AddWithValue("@UserID", userID);
+                command2.Parameters.AddWithValue("@data", DateTime.Now.ToString("yyyy-MM-dd"));
+                command2.Parameters.AddWithValue("@start_time", DateTime.Now.ToString("HH:mm:ss"));
+                command2.ExecuteNonQuery();
+            }
+
             db.closeConnection();
         }
 
@@ -524,8 +583,18 @@ namespace TimerApp
             LogToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Aplicatia sa oprit!");
 
             _closeFrom1 = true;
+
+            
+            this.stopwatchTimer.Stop();
+            this.logTimer.Stop();
+            this.inactivityTimer.Stop();
+            this.inactivityTimer2.Stop();
+            
+            this.Dispose();
             this.Close();
         }
+
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -546,6 +615,7 @@ namespace TimerApp
         private PictureBox StartPictureBox;
         private PictureBox SettingsPictureBox;
         private PictureBox PausePictureBox;
-        private Button button1;
+        private Button SaveLogs;
+        private Button LogOut;
     }
 }

@@ -22,7 +22,8 @@ namespace TimerApp
             this.StartPictureBox = new System.Windows.Forms.PictureBox();
             this.SettingsPictureBox = new System.Windows.Forms.PictureBox();
             this.PausePictureBox = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.SaveLogs = new System.Windows.Forms.Button();
+            this.LogOut = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.HidePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClosePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartPictureBox)).BeginInit();
@@ -88,20 +89,31 @@ namespace TimerApp
             this.PausePictureBox.Visible = false;
             this.PausePictureBox.Click += new System.EventHandler(this.buttonPause_Click);
             // 
-            // button1
+            // SaveLogs
             // 
-            this.button1.Location = new System.Drawing.Point(213, 325);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.SaveLogs.Location = new System.Drawing.Point(175, 325);
+            this.SaveLogs.Name = "SaveLogs";
+            this.SaveLogs.Size = new System.Drawing.Size(75, 23);
+            this.SaveLogs.TabIndex = 9;
+            this.SaveLogs.Text = "SaveLogs";
+            this.SaveLogs.UseVisualStyleBackColor = true;
+            this.SaveLogs.Click += new System.EventHandler(this.btn_SaveLogs_Click);
+            // 
+            // LogOut
+            // 
+            this.LogOut.Location = new System.Drawing.Point(256, 325);
+            this.LogOut.Name = "LogOut";
+            this.LogOut.Size = new System.Drawing.Size(75, 23);
+            this.LogOut.TabIndex = 10;
+            this.LogOut.Text = "Log Out";
+            this.LogOut.UseVisualStyleBackColor = true;
+            this.LogOut.Click += new System.EventHandler(this.LogOut_Click);
             // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(498, 462);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.LogOut);
+            this.Controls.Add(this.SaveLogs);
             this.Controls.Add(this.PausePictureBox);
             this.Controls.Add(this.SettingsPictureBox);
             this.Controls.Add(this.StartPictureBox);
